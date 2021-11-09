@@ -1,0 +1,15 @@
+on: workflow_dispatch
+
+jobs:
+  deploy_production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build, push, and release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:login
+          heroku container:push -a szakdolgozat-docker-production web
+          heroku container:release -a szakdolgozat-docker-production web
