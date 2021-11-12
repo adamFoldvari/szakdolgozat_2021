@@ -1,0 +1,38 @@
+steps:
+  - name: 'docker/compose:latest'
+    args: [ 'build', 'app']
+
+  - name: 'docker/compose:latest'
+    args: ['run', 'app', 'sh', '-c', 'pip install -r requirements-test.txt && python -m pytest']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+     - '-c'
+     - |
+       docker tag workspace_app:latest gcr.io/$PROJECT_ID/$_IMAGE:$COMMIT_SHA \
+       && docker push gcr.io/$PROJECT_ID/$_IMAGE:$COMMIT_SHA
+
+  - name: 'gcr.io/composed-falcon-331621/kustomize:latest'
+    entrypoint: 'bash'
+    args:
+     - '-c'
+     - |
+       (cd kubernetes/base \
+       && kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$_IMAGE:$COMMIT_SHA) \
+       && kustomize build kubernetes/overlays/cloudbuild -o /workspace/resources.yaml
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', '/workspace/resources.yaml']
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: [ 'rollout', 'status', 'deployment/$_DEPLOYMENT_NAME' ]
+
+options:
+  env:
+    - CLOUDSDK_CONTAINER_CLUSTER=szakdolgozat-cluster
+    - CLOUDSDK_COMPUTE_ZONE=us-west1
+
+substitutions:
+  _DEPLOYMENT_NAME: szakdolgozat-cloudbuild-staging
+  _IMAGE: szakdoglozat-cloudbuild
