@@ -4,8 +4,10 @@ import re
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
+from flask_migrate import Migrate
 
-
+db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -18,7 +20,10 @@ def create_app(test_config=None):
 
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL").replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db = SQLAlchemy(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    from healthcheck_api import entries
 
     @app.route("/")
     @app.route("/healthcheck")
