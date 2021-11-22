@@ -21,6 +21,10 @@ jobs:
         run: |
           docker-compose build app
 
+      - name: Create db
+        run: |
+          docker-compose up -d db
+
       - name: Run tests
         run: |
           docker-compose run app sh -c "pip install -r requirements-test.txt && python -m pytest"
@@ -47,4 +51,3 @@ jobs:
           (cd kubernetes/base && ../../kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA)
           ./kustomize build kubernetes/overlays/github | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
-          kubectl get services -o wide

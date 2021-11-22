@@ -1,8 +1,10 @@
 import os
+import re
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
+
 
 
 def create_app(test_config=None):
@@ -14,7 +16,7 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL").replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db = SQLAlchemy(app)
 

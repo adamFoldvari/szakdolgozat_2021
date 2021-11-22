@@ -12,6 +12,14 @@ patches:
       - op: replace
         path: /metadata/name
         value: szakdolgozat-cloudbuild-staging
+      - op: add
+        path: "/spec/template/spec/containers/0/env"
+        value:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: szakdolgozat-shared
+                key: db_url_cloudbuild
   - target:
       kind: Service
       name: .*
@@ -19,3 +27,4 @@ patches:
       - op: replace
         path: /metadata/name
         value: szakdolgozat-cloudbuild-staging-service
+

@@ -3,6 +3,9 @@ steps:
     args: [ 'build', 'app']
 
   - name: 'docker/compose:latest'
+    args:  ['up', '-d', 'db']
+
+  - name: 'docker/compose:latest'
     args: ['run', 'app', 'sh', '-c', 'pip install -r requirements-test.txt && python -m pytest']
 
   - name: 'gcr.io/cloud-builders/docker'
