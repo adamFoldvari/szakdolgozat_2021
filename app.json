@@ -2,9 +2,13 @@
   "name": "HealthCheckAPI",
   "repository": "https://github.com/adamFoldvari/szakdolgozat_2021.git",
   "success_url": "/healthcheck",
+  "env": {
+    "FLASK_APP": "healthcheck_api"
+  },
   "environments": {
     "test": {
       "scripts": {
+        "test-setup": "flask db upgrade",
         "test": "pytest"
       },
       "formation": {

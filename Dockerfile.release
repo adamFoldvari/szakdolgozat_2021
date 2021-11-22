@@ -15,4 +15,4 @@ ADD ./migrations opt/migrations
 
 WORKDIR /opt
 
-CMD gunicorn --bind 0.0.0.0:$PORT "healthcheck_api:create_app()"
+CMD flask db upgrade

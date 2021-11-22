@@ -25,6 +25,10 @@ jobs:
         run: |
           docker-compose up -d db
 
+      - name: Migrate database
+        run: |
+          docker-compose run app sh -c "flask db upgrade"
+
       - name: Run tests
         run: |
           docker-compose run app sh -c "pip install -r requirements-test.txt && python -m pytest"

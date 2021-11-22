@@ -32,6 +32,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-test.txt
 
+      - name: Run database migration
+        run: |
+          flask db upgrade
+        env:
+          FLASK_APP: "healthcheck_api"
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432"
+
       - name: Run tests
         run: |
           python -m pytest
@@ -44,4 +51,5 @@ jobs:
         run: |
           heroku container:login
           heroku container:push -a szakdolgozat-docker-stage web
-          heroku container:release -a szakdolgozat-docker-stage web
+          heroku container:push release --recursive -a szakdolgozat-docker-stage
+          heroku container:release -a szakdolgozat-docker-stage web release

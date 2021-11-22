@@ -7,6 +7,7 @@ services:
       dockerfile: ./Dockerfile
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432"
+      FLASK_APP: "healthcheck_api"
     ports:
       - '80:8000'
     volumes:
