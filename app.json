@@ -9,7 +9,7 @@
     "test": {
       "scripts": {
         "test-setup": "flask db upgrade",
-        "test": "pytest"
+        "test": "python -m pytest --benchmark-min-rounds=5000"
       },
       "formation": {
         "test": {

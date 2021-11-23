@@ -31,7 +31,7 @@ jobs:
 
       - name: Run tests
         run: |
-          docker-compose run app sh -c "pip install -r requirements-test.txt && python -m pytest"
+          docker-compose run app sh -c "pip install -r requirements-test.txt && python -m pytest --benchmark-min-rounds=5000"
 
       - uses: google-github-actions/setup-gcloud@master
         with:

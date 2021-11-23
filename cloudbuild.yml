@@ -9,7 +9,7 @@ steps:
     args: ['run', 'app', 'sh', '-c', 'flask db upgrade']
 
   - name: 'docker/compose:latest'
-    args: ['run', 'app', 'sh', '-c', 'pip install -r requirements-test.txt && python -m pytest']
+    args: ['run', 'app', 'sh', '-c', 'pip install -r requirements-test.txt && python -m pytest --benchmark-min-rounds=5000']
 
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'

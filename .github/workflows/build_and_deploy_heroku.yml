@@ -41,7 +41,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m pytest
+          python -m pytest --benchmark-min-rounds=5000
         env:
           DATABASE_URL: "postgresql://postgres:postgres@localhost:5432"
 
