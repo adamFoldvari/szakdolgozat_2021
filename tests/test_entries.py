@@ -41,3 +41,14 @@ class TestEntryModule(unittest.TestCase):
 
         response = self.client.get('/entries/1')
         assert response.json == {"id": 1, "name": 'test_entry'}
+
+    def test_update_entry(self):
+        with self.app.app_context():
+            new_entry = EntryModel('test_entry')
+            db.session.add(new_entry)
+            db.session.commit()
+
+        response = self.client.put('/entries/1',
+                                   data=json.dumps({"name": "new_name"}),
+                                   content_type='application/json')
+        assert response.json == {"id": 1, "name": 'new_name'}
