@@ -1,7 +1,12 @@
-from flask import current_app
-from . import db
+from dataclasses import dataclass
+from healthcheck_api import db
 
+
+@dataclass
 class EntryModel(db.Model):
+    id: int
+    name: str
+
     __tablename__ = 'entries'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -12,3 +17,4 @@ class EntryModel(db.Model):
 
     def __repr__(self):
         return f"<Entry {self.name}>"
+

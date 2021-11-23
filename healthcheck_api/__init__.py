@@ -1,13 +1,13 @@
 import os
-import re
 
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from flask_migrate import Migrate
 
 db = SQLAlchemy()
 migrate = Migrate()
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -23,15 +23,21 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from healthcheck_api import entries
+    from healthcheck_api.entries import EntryModel
 
     @app.route("/")
     @app.route("/healthcheck")
     def healthcheck():
         try:
             db.session.query(text('1')).from_statement(text('SELECT 1')).all()
-            return { "success": True }
+            return {"success": True}
         except Exception as e:
-            return { "error": str(e) }, 500
+            return {"error": str(e)}, 500
+
+    @app.route('/entries', methods=['GET'])
+    def handle_entries():
+        if request.method == 'GET':
+            entries = EntryModel.query.all()
+            return jsonify(entries), 200
 
     return app

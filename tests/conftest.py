@@ -1,7 +1,6 @@
 import os
-import tempfile
-
 import pytest
+
 from healthcheck_api import create_app
 
 
@@ -17,5 +16,11 @@ def client(app):
 
 @pytest.fixture
 def db_error_client():
+    conn_string = os.environ['DATABASE_URL']
+
     os.environ['DATABASE_URL'] = 'invalid_conn_string'
-    return create_app({'TESTING': True}).test_client()
+    app = create_app({'TESTING': True}).test_client()
+
+    os.environ['DATABASE_URL'] = conn_string
+    return app
+
