@@ -47,4 +47,12 @@ def create_app(test_config=None):
             db.session.commit()
             return jsonify(entry), 200
 
+    @app.route('/entries/<entry_id>', methods=['GET'])
+    def handle_entry(entry_id):
+        entry = EntryModel.query.get_or_404(entry_id)
+
+        if request.method == 'GET':
+            return jsonify(entry), 200
+
+
     return app
