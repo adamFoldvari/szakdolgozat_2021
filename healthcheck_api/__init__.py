@@ -34,10 +34,17 @@ def create_app(test_config=None):
         except Exception as e:
             return {"error": str(e)}, 500
 
-    @app.route('/entries', methods=['GET'])
+    @app.route('/entries', methods=['GET', 'POST'])
     def handle_entries():
         if request.method == 'GET':
             entries = EntryModel.query.all()
             return jsonify(entries), 200
+
+        elif request.method == 'POST':
+            data = request.get_json()
+            entry = EntryModel(data['name'])
+            db.session.add(entry)
+            db.session.commit()
+            return jsonify(entry), 200
 
     return app

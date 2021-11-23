@@ -1,3 +1,5 @@
+import json
+
 from healthcheck_api import db, create_app
 from healthcheck_api.entries import EntryModel
 import unittest
@@ -25,3 +27,8 @@ class TestEntryModule(unittest.TestCase):
         response = self.client.get('/entries')
         assert response.json == [{"id": 1, "name": 'test_entry'}]
 
+    def test_create_entry(self):
+        response = self.client.post('/entries',
+                                    data=json.dumps({"name": "test_entry"}),
+                                    content_type='application/json')
+        assert response.json == {"id": 1, "name": 'test_entry'}
